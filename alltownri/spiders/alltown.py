@@ -11,13 +11,13 @@ class AlltownSpider(scrapy.Spider):
     start_urls = ["https://www.alltownri.com/search/results/?state=RI&county=all&city=all&beds_min=all&baths_min=all&list_price_min=175000&list_price_max=325000&type=res"]
 
     def parse(self, response):
-        print("url ::::::::::::: ",response.url)
+        print("url!!!!!!!!!!!!!!!!!! ",response.url)
         items = response.xpath("//div[@class='property-detail-section']/div/div/a/@href").extract()
         print("Total : ",len(items))
         if items:
             for item in items:
                 link = "https://www.alltownri.com{0}".format(item)
-                # yield scrapy.Request(url=link, callback=self.parse_property)
+                yield scrapy.Request(url=link, callback=self.parse_property)
                 # break
 
         next_page_list = response.xpath("//ul[@class='pagination']/li")[-2].xpath("./a/text()").extract_first()
@@ -38,8 +38,6 @@ class AlltownSpider(scrapy.Spider):
 
     def parse_property(self, response):
         # print("---------------------------------------")
-        print("YYYYYYYYYYYYYYYYYYYYYYY")
-        print(response.url)
         url = response.url
         image = response.xpath("//meta[@property='og:image']/@content").extract_first()
         # home_id = response.url.split("RIS-")[-1].split("/")[0].strip()
